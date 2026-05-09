@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Mail, ExternalLink, FileText, Code2 } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { useState, useEffect } from "react";
-import Typewriter from "typewriter-effect";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 interface Particle {
@@ -21,6 +20,7 @@ interface Particle {
 
 export function Hero() {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const typewriterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const generatedParticles = [...Array(20)].map((_, i) => ({
@@ -34,10 +34,44 @@ export function Hero() {
       duration: Math.random() * 10 + 10,
     }));
     setParticles(generatedParticles);
+
+    // Optimized Typewriter Logic (Bypasses React Render Cycle)
+    const el = typewriterRef.current;
+    if (!el) return;
+
+    const words = ["MERN Stack Developer", "AI/ML Enthusiast", "Full Stack Engineer"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let timeoutId: NodeJS.Timeout;
+
+    const tick = () => {
+      const current = words[wordIndex];
+      el.textContent = deleting
+        ? current.substring(0, charIndex--)
+        : current.substring(0, charIndex++);
+
+      let delta = deleting ? 50 : 100;
+
+      if (!deleting && charIndex === current.length + 1) {
+        deleting = true;
+        delta = 1500; // Pause at end of word
+      } else if (deleting && charIndex < 0) {
+        deleting = false;
+        charIndex = 0;
+        wordIndex = (wordIndex + 1) % words.length;
+        delta = 500; // Pause before next word
+      }
+
+      timeoutId = setTimeout(tick, delta);
+    };
+
+    tick();
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 isolate">
       {/* Background Decoration */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="mesh-gradient absolute inset-0" />
@@ -76,6 +110,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          style={{ willChange: "transform, opacity" }}
         >
           <Badge className="mb-8 py-2 px-6 text-sm font-semibold tracking-wide uppercase bg-blue-100/80 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/30">
             <span className="flex h-2 w-2 mr-2">
@@ -92,24 +127,28 @@ export function Hero() {
                 Deep Bhanushali
               </span>
               <motion.span
-                className="absolute -bottom-1 md:-bottom-2 left-0 w-full h-2 md:h-3 bg-blue-100 dark:bg-blue-900/30 -z-10 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
+                className="absolute -bottom-1 md:-bottom-2 left-0 w-full h-2 md:h-3 bg-blue-100 dark:bg-blue-900/30 -z-10 rounded-full origin-left"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
                 transition={{ delay: 0.8, duration: 1 }}
               />
             </span>
           </h1>
 
-          <div className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 mb-8 md:mb-10 min-h-[30px] md:min-h-[40px]">
-            <Typewriter
-              options={{
-                strings: ["MERN Stack Developer", "AI/ML Enthusiast", "Full Stack Engineer"],
-                autoStart: true,
-                loop: true,
-                delay: 75,
-                deleteSpeed: 50,
+          <div className="flex items-center justify-center mb-8 md:mb-10 overflow-hidden">
+            <div 
+              ref={typewriterRef}
+              className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 min-h-[1.5em] md:min-h-[1.2em] flex items-center justify-center"
+              style={{ 
+                minWidth: '280px', 
+                display: 'inline-block',
+                willChange: 'transform',
+                transform: 'translateZ(0)'
               }}
-            />
+            >
+              {/* Typewriter content injected via ref */}
+            </div>
+            <span className="w-1 h-[1.2em] bg-blue-600 dark:bg-blue-400 ml-1 animate-pulse" />
           </div>
 
           <p className="text-base sm:text-lg md:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 md:mb-12 leading-relaxed font-medium px-2 sm:px-0">
@@ -137,6 +176,7 @@ export function Hero() {
                 key={idx}
                 whileHover={{ y: -5, scale: 1.1 }}
                 className="relative group"
+                style={{ willChange: 'transform' }}
               >
                 <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-violet-600 rounded-full opacity-0 group-hover:opacity-20 blur transition-opacity" />
                 <Link href={social.href} target="_blank" className="relative text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
