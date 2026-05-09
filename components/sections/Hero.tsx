@@ -71,14 +71,14 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 isolate">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 isolate" style={{ perspective: '1000px', backfaceVisibility: 'hidden' }}>
       {/* Background Decoration */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="mesh-gradient absolute inset-0" />
         <div className="grid-pattern absolute inset-0 opacity-[0.3] dark:opacity-[0.1]" />
 
-        {/* Animated Background Blobs */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        {/* Animated Background Blobs - Desktop Only to prevent mobile flicker */}
+        <div className="hidden md:block absolute top-0 left-0 w-full h-full overflow-hidden">
           {particles.map((particle) => (
             <motion.div
               key={particle.id}
@@ -88,17 +88,21 @@ export function Hero() {
                 height: particle.height,
                 left: particle.left,
                 top: particle.top,
+                willChange: 'transform, opacity',
+                transform: 'translate3d(0,0,0)',
+                backfaceVisibility: 'hidden'
               }}
               animate={{
                 x: particle.moveX,
                 y: particle.moveY,
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3],
+                scale: [1, 1.1, 1], 
+                opacity: [0.2, 0.4, 0.2],
               }}
               transition={{
                 duration: particle.duration,
                 repeat: Infinity,
                 repeatType: "reverse",
+                ease: "linear"
               }}
             />
           ))}
@@ -110,7 +114,12 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          style={{ willChange: "transform, opacity" }}
+          style={{ 
+            willChange: "transform, opacity",
+            transform: 'translate3d(0,0,0)',
+            backfaceVisibility: 'hidden',
+            WebkitFontSmoothing: 'antialiased'
+          }}
         >
           <Badge className="mb-8 py-2 px-6 text-sm font-semibold tracking-wide uppercase bg-blue-100/80 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/30">
             <span className="flex h-2 w-2 mr-2">
@@ -120,7 +129,7 @@ export function Hero() {
             Open for opportunity
           </Badge>
 
-          <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter text-slate-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter text-slate-900 dark:text-white" style={{ transform: 'translate3d(0,0,0)' }}>
             Hi, I&apos;m <br className="sm:hidden" />
             <span className="relative inline-block mt-2 md:mt-0">
               <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600 dark:from-blue-400 dark:via-violet-400 dark:to-indigo-400">
@@ -135,16 +144,20 @@ export function Hero() {
             </span>
           </h1>
 
-          <div className="flex items-center justify-center mb-8 md:mb-10 overflow-hidden">
+          <div className="flex items-center justify-center mb-8 md:mb-10">
             <div 
-              className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 min-h-[1.5em] md:min-h-[1.2em] flex items-center justify-center min-w-[280px]"
+              className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 flex items-center justify-center min-w-[280px]"
               style={{ 
+                height: '1.2em', // Fixed height
+                lineHeight: '1.2em', // Stable line height
                 willChange: 'transform',
-                transform: 'translateZ(0)'
+                transform: 'translate3d(0,0,0)',
+                backfaceVisibility: 'hidden',
+                WebkitFontSmoothing: 'antialiased'
               }}
             >
-              <span ref={typewriterRef} className="inline-block" />
-              <span className="inline-block w-1 h-[1.1em] bg-blue-600 dark:bg-blue-400 ml-1 animate-pulse" />
+              <span ref={typewriterRef} className="inline-block" style={{ fontWeight: 'inherit' }} />
+              <span className="inline-block w-1 h-[0.9em] bg-blue-600 dark:bg-blue-400 ml-1 animate-pulse" />
             </div>
           </div>
 
