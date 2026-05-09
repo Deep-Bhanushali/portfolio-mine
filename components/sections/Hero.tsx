@@ -137,18 +137,15 @@ export function Hero() {
 
           <div className="flex items-center justify-center mb-8 md:mb-10 overflow-hidden">
             <div 
-              ref={typewriterRef}
-              className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 min-h-[1.5em] md:min-h-[1.2em] flex items-center justify-center"
+              className="text-xl sm:text-2xl md:text-4xl font-bold text-slate-700 dark:text-slate-200 min-h-[1.5em] md:min-h-[1.2em] flex items-center justify-center min-w-[280px]"
               style={{ 
-                minWidth: '280px', 
-                display: 'inline-block',
                 willChange: 'transform',
                 transform: 'translateZ(0)'
               }}
             >
-              {/* Typewriter content injected via ref */}
+              <span ref={typewriterRef} className="inline-block" />
+              <span className="inline-block w-1 h-[1.1em] bg-blue-600 dark:bg-blue-400 ml-1 animate-pulse" />
             </div>
-            <span className="w-1 h-[1.2em] bg-blue-600 dark:bg-blue-400 ml-1 animate-pulse" />
           </div>
 
           <p className="text-base sm:text-lg md:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 md:mb-12 leading-relaxed font-medium px-2 sm:px-0">
