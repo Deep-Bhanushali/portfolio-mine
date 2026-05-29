@@ -1,0 +1,69 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+@layer base {
+  body {
+    @apply bg-void text-text font-mono antialiased selection:bg-cyber selection:text-void overflow-x-hidden;
+    background-image:
+      linear-gradient(rgba(52, 232, 220, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52, 232, 220, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  html { scroll-behavior: smooth; }
+}
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 8px rgba(52, 232, 220, 0.32), 0 0 18px rgba(52, 232, 220, 0.18);
+  }
+  .border-glow {
+    box-shadow: 0 0 0 1px rgba(52, 232, 220, 0.32), 0 0 18px rgba(52, 232, 220, 0.12);
+  }
+  .scanline {
+    background: linear-gradient(to bottom, transparent, rgba(52, 232, 220, 0.18), transparent);
+  }
+}
+/* Vignette overlay */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at center, transparent 46%, rgba(5, 5, 16, 0.42) 100%);
+}
+/* CRT scanline overlay */
+.crt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 3px,
+    transparent 4px
+  );
+  opacity: 0.14;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050510; }
+::-webkit-scrollbar-thumb { background: #1f2040; }
+::-webkit-scrollbar-thumb:hover { background: #34e8dc; }
+/* Glitch effect */
+@keyframes glitch-x {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+}
+.glitch:hover {
+  animation: glitch-x 0.3s linear;
+}
